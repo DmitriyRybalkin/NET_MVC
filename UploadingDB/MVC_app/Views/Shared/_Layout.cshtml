@@ -1,0 +1,103 @@
+﻿
+@model UlpoadingData.Web.Models.Base.BaseModel
+@{
+    String DisplayName = String.Empty;
+	String TransactionCode = String.Empty;
+    String Action = String.Empty;
+    String loginLabel = String.Empty;
+    String logoutLabel = String.Empty;
+    String copyrightLabel = String.Empty;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>@ViewBag.Title - Test</title>
+	<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+	<meta name="viewport" content="width=device-width" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.datepicker.css")" 
+        rel="stylesheet"  type="text/css" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.theme.css")" 
+        rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/calendar-blue.css")" 
+        rel="stylesheet" type="text/css" />
+
+    <script src="@Url.Content("~/Scripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.10.4.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.dynDateTime.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/calendar-en.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-timepicker-addon.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/modernizr-1.7.min.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/MicrosoftAjax.debug.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/MicrosoftMvcAjax.debug.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/MicrosoftMvcValidation.debug.js")" type="text/javascript"></script>
+  
+	@Styles.Render("~/Content/main")
+    @RenderSection("scripts", required: false)
+
+</head>
+<body onload="javascript:callSetFocus()">
+    <script type="text/javascript">
+        function callSetFocus() {
+            try {
+                setFocus();
+            } catch (e) {
+            }
+
+        }
+    </script>
+    <div class="pageFrame01">
+        <div class="pageFrame02">
+            <div class="pageFrame03">
+                <div id="header">
+
+                    <div class="float-right">
+				            @{
+
+		                            <span id="loggedOn" class="username">@Html.Label("You are logged on as: ") @User.Identity.Name</span>
+						            @Html.ActionLink("Logout", "EntryPoint", "Logout")
+				            }
+                    </div>
+                                    <ul>
+					                @{
+
+										if(Model.isHome)
+										{
+											<li class="extFirstTabSelected">@Html.ActionLink("Home", "EntryPoint", "Index")</li>
+                                        }
+                                        else
+                                        {
+											<li class="extFirstTab">@Html.ActionLink("Home", "EntryPoint", "Index")</li>
+                                        }
+
+					                }
+                                    </ul> 
+                    </div>
+			        <div class="colmask leftmenu">
+                        <div class="colleft">
+                            <div class="col1">
+                                <div class="page-header">                             
+                                    @Html.Label("Main Page")
+                                    
+                                </div>
+                                @RenderBody()
+                            </div>
+                            <div class="col2">
+                                 <ul>
+								    <li class="left-menu-item">@Html.Label("Uploading data to DB")</li>
+								    <li class="left-menu-subitem">@Html.ActionLink("Primary load of data", "EntryPoint", "UploadingData")</li>
+                                    <li class="left-menu-subitem">@Html.ActionLink("Daily load of data", "EntryPoint", "DailyUploadingData")</li>
+				                </ul>
+                            </div>
+                        </div>
+                    </div>
+		        <div id="footer">
+				        <p>&copy; @Html.Label("Dmitriy Rybalkin") @DateTime.Now.Year</p>
+		        </div>
+            </div>
+        </div>
+    </div>
+	
+	@RenderSection("scripts", required: false)
+</body>
+</html>

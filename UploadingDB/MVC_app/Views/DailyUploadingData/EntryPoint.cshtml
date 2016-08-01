@@ -1,0 +1,98 @@
+﻿@model UlpoadingData.Web.Models.UploadingDataModel
+
+@using System.Data
+
+    <style type="text/css">
+        .webGrid { margin-top: 4px; width: 100%; font-size: 11px; }
+        .header { font-weight: bold; text-align: left; font-size: 11px;}
+        .header a { text-decoration: none; text-align: left;}
+        .header a:hover { text-decoration: underline; }
+        .webGrid th { padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; background-color: #999999; color: #ffffff; text-align: left;}
+        .webGrid td { border-left: hidden; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; background-color: #eeeeee; 
+                          border-bottom: 3px solid white; border-top: 0; border-left: 0; border-right: 0;}
+        .alt { background-color: #E8E8E8; color: #000; }
+    </style>
+
+     @{ Html.EnableClientValidation(); }
+
+     @using (Html.BeginForm("EntryPoint", "DailyUploadingData", FormMethod.Post))
+     {
+         
+         @Html.HiddenFor(model => model.FileName)
+
+         if (!String.IsNullOrEmpty(Model.ErrorDescription))
+         {
+             <div class="labelBold_red">
+                @Html.DisplayFor(model => model.ErrorDescription)
+             </div>    
+         }
+            <table style = "width:100%">
+                <tr class="tableLine">
+                    <td class = "short_column">
+                        @Html.Label("File location")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.FileName)
+                    </td>
+                </tr>
+                <tr class="tableLine">
+                    <td class="short_column">
+                        @Html.Label("RNN")
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.Rnn)
+                    </td>
+                </tr>
+            </table>
+         
+         if (Model.LoadDaily != null)
+             {
+                 var result = new List<dynamic>();
+                 foreach (DataRow row in Model.LoadDaily.Rows)
+                 {
+                     var obj = (IDictionary<string, object>)new System.Dynamic.ExpandoObject();
+                     foreach (DataColumn col in Model.LoadDaily.Columns)
+                     {
+                         obj.Add(col.ColumnName, row[col.ColumnName]);
+                     }
+
+                     result.Add(obj);
+                 }
+
+                 WebGrid grid = new WebGrid(result, canPage: true, rowsPerPage: 10, canSort: false, ajaxUpdateContainerId: "gridContent");
+                 grid.Pager(WebGridPagerModes.NextPrevious);
+                 
+                 
+                  <div id="gridContent">
+                        @grid.GetHtml(tableStyle: "webGrid",
+                                htmlAttributes: new { id = "DataTable" },
+                                headerStyle: "header",
+                                alternatingRowStyle: "alt",
+                                columns: grid.Columns(
+                                grid.Column("RNN", "RNN"),
+                                grid.Column("IIN_BIN", "IIN\\BIN"),
+                                grid.Column("TAXPAYER_TYPE", "TAXPAYER TYPE"),
+                                grid.Column("RESIDENCY_TYPE", "RESIDENCY TYPE"),
+                                grid.Column("INDIVIDUAL_NAME", "INDIVIDUAL NAME"),
+                                grid.Column("TAXPAYER_NAME_BY_LOCATION", "TAXPAYER NAME BY LOCATION"),
+                                grid.Column("RECORD_PROCESSING_TYPE", "RECORD PROCESSING TYPE")
+
+                        ))
+                    </div>
+             }
+             
+                 <table style = "width:100%">
+                   <tr class="tableLine">
+                        <td>
+                            <button type="submit" class="btnGrey1" value="btnDisplay" name="command">Display</button>
+                        </td>
+                        <td>
+                            <button type="submit" class="btnRed2" value="btnUpload" name="command">Upload</button>
+                        </td>
+                   </tr>
+                 </table>
+         
+         
+         
+       }
+
